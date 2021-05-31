@@ -9,6 +9,7 @@
 namespace Sylae;
 
 
+use OutOfRangeException;
 use PHPUnit\Framework\TestCase;
 
 class WordcountTest extends TestCase
@@ -16,8 +17,6 @@ class WordcountTest extends TestCase
 
     /**
      * These are copy-pasted from Iarna's test suite.
-     *
-     * @depends testLoadLetters
      */
     public function testCountAccuracy()
     {
@@ -38,8 +37,6 @@ class WordcountTest extends TestCase
 
     /**
      * Tests some weird shit that might result from parser stuff being wonky.
-     *
-     * @depends testLoadLetters
      */
     public function testCountWeirdShit()
     {
@@ -47,21 +44,8 @@ class WordcountTest extends TestCase
         $this->assertEquals(Wordcount::count('---'), 0, 'just some hyphens');
         $this->assertEquals(Wordcount::count(' '), 0, 'just a space');
         $this->assertEquals(Wordcount::count('hi'), 1, 'just one word');
-    }
 
-    /**
-     * This mostly checks to see if caching is working properly, since generating the letters array is SLOW as FUCK :v
-     */
-    public function testLoadLetters()
-    {
-        $t1 = microtime(true);
-        $this->assertNull(Wordcount::loadLetters());
-        $t2 = microtime(true);
-
-        $t3 = microtime(true);
-        $this->assertNull(Wordcount::loadLetters());
-        $t4 = microtime(true);
-
-        $this->assertLessThanOrEqual($t2 - $t1, $t4 - $t3);
+        $this->expectException(OutOfRangeException::class);
+        Wordcount::count("\u{FDD0}");
     }
 }
