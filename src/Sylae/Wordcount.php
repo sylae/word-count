@@ -79,4 +79,13 @@ class Wordcount
         return $cache[$codepoint];
     }
 
+    /**
+     * kept for bc, does nothing
+     * @deprecated will be removed in v2.0
+     */
+    public static function loadLetters(): void
+    {
+        // does nothing
+    }
+
 }
